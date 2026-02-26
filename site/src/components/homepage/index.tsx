@@ -9,6 +9,7 @@ import { examples, populateExample } from "./usage";
 import * as Logos from "./logos";
 import { Demo } from "./demo";
 import { Button } from "../button";
+import { useWebHaptics } from "web-haptics/react";
 
 const frameworks = [
   {
@@ -39,6 +40,7 @@ const frameworks = [
 
 export default function Home() {
   const [frameworkIndex, setFrameworkIndex] = useState(0);
+  const { trigger } = useWebHaptics();
 
   return (
     <div className={styles.page}>
@@ -64,7 +66,10 @@ export default function Home() {
                 <Button
                   key={f.name}
                   disabled={frameworkIndex === i}
-                  onClick={() => setFrameworkIndex(i)}
+                  onClick={() => {
+                    setFrameworkIndex(i);
+                    trigger();
+                  }}
                   aria-label={`View example for ${f.name}`}
                 >
                   <span className={styles.logo}>{f.logo}</span>

@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import styles from "./styles.module.scss";
 import { CodeBlock } from "../codeblock";
+import { useWebHaptics } from "web-haptics/react";
 
 const pkgCmds = {
   npm: "npm i web-haptics",
@@ -12,13 +13,17 @@ const pkgCmds = {
 
 export const InstallCommands = () => {
   const [cmdIndex, setCmdIndex] = useState(0);
+  const { trigger } = useWebHaptics();
   return (
     <div className={styles.install}>
       <div className={styles.commands}>
         {Object.keys(pkgCmds).map((cmd, i) => (
           <button
             key={cmd}
-            onClick={() => setCmdIndex(i)}
+            onClick={() => {
+              setCmdIndex(i);
+              trigger();
+            }}
             data-active={i === cmdIndex}
           >
             {cmd}

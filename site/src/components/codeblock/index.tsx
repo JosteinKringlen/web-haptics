@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import styles from "./styles.module.scss";
 import { AutoResize } from "../auto-resizer";
+import { useWebHaptics } from "web-haptics/react";
 
 export const CodeBlock = ({
   code,
@@ -11,6 +12,7 @@ export const CodeBlock = ({
   children?: React.ReactNode;
 }) => {
   const [isCopied, setIsCopied] = useState(false);
+  const { trigger } = useWebHaptics();
 
   return (
     <div className={styles.container}>
@@ -20,6 +22,7 @@ export const CodeBlock = ({
           if (code) {
             setIsCopied(true);
             navigator.clipboard.writeText(code.toString());
+            trigger();
             setTimeout(() => {
               setIsCopied(false);
             }, 2000);
