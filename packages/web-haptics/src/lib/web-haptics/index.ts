@@ -215,6 +215,7 @@ export class WebHaptics {
       });
       Object.assign(hapticCheckbox.style, {
         all: "initial",
+        appearance: "auto",
       });
     } else {
       hapticLabel.style.display = "none";
