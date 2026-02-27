@@ -4,19 +4,41 @@ import { useWebHaptics } from "web-haptics/react";
 import { defaultPatterns } from "web-haptics";
 import { useRef, useState } from "react";
 import { Button } from "../button";
+import { useParticles } from "../particles";
+
+// add emoji sets
+const emojis = {
+  success: ["✅", "🎉", "✨"],
+  nudge: ["👈", "👉", "👆", "👇"],
+  error: ["❌", "💥", "🔥"],
+  long: ["🐝", "🍯"],
+};
 
 export const Demo = () => {
   const { trigger } = useWebHaptics({
     debug: import.meta.env.DEV,
   });
+  const { create } = useParticles();
+
   const [intensity, setIntensity] = useState<number | undefined>(undefined);
   const spanRefs = useRef<Map<string, HTMLSpanElement>>(new Map());
 
   const handleTrigger = (
     name: string,
     pattern: (typeof defaultPatterns)[keyof typeof defaultPatterns],
+    x?: number,
+    y?: number,
   ) => {
     trigger(pattern, { intensity });
+    if (x !== undefined && y !== undefined) {
+      create(
+        x,
+        y,
+        emojis[name as keyof typeof emojis][
+          Math.floor(Math.random() * emojis[name as keyof typeof emojis].length)
+        ],
+      );
+    }
     const span = spanRefs.current.get(name);
     if (!span) return;
     span.classList.remove(styles[name]!);
@@ -31,8 +53,17 @@ export const Demo = () => {
           <button
             key={name}
             aria-description={pattern.description}
-            onTouchStart={() => handleTrigger(name, pattern)}
-            onMouseDown={() => handleTrigger(name, pattern)}
+            onTouchStart={(e) =>
+              handleTrigger(
+                name,
+                pattern,
+                e.touches[0].clientX,
+                e.touches[0].clientY,
+              )
+            }
+            onMouseDown={(e) =>
+              handleTrigger(name, pattern, e.clientX, e.clientY)
+            }
           >
             <span
               ref={(el) => {

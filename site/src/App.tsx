@@ -1,10 +1,11 @@
 import Home from "./components/homepage";
+import { ParticlesProvider } from "./components/particles";
 
 function App() {
   return (
-    <div>
+    <ParticlesProvider>
       <Home />
-    </div>
+    </ParticlesProvider>
   );
 }
 

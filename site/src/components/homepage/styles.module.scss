@@ -10,35 +10,34 @@
   &:before {
     content: "";
     pointer-events: none;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     height: 10rem;
 
-    opacity: 0.06;
+    opacity: 0.16;
 
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 100%),
-      linear-gradient(
-        90deg,
-        rgba(255, 43, 58, 1) 0%,
-        rgba(255, 50, 155, 1) 6.25%,
-        rgba(236, 52, 247, 1) 12%,
-        rgba(159, 79, 255, 1) 18%,
-        rgba(89, 70, 249, 1) 24%,
-        rgba(0, 130, 255, 1) 30%,
-        rgba(0, 178, 255, 1) 36%,
-        rgba(0, 168, 239, 1) 42%,
-        rgba(0, 190, 202, 1) 48%,
-        rgba(0, 188, 124, 1) 54%,
-        rgba(0, 202, 72, 1) 60%,
-        rgba(107, 206, 0, 1) 66%,
-        rgba(244, 176, 0, 1) 72%,
-        rgba(255, 153, 0, 1) 84%,
-        rgba(255, 104, 0, 1) 90%,
-        rgba(255, 45, 94, 1) 96%
-      );
+    mask-image: linear-gradient(180deg, #000000 0%, transparent 100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 43, 58, 1) 0%,
+      rgba(255, 50, 155, 1) 6.25%,
+      rgba(236, 52, 247, 1) 12%,
+      rgba(159, 79, 255, 1) 18%,
+      rgba(89, 70, 249, 1) 24%,
+      rgba(0, 130, 255, 1) 30%,
+      rgba(0, 178, 255, 1) 36%,
+      rgba(0, 168, 239, 1) 42%,
+      rgba(0, 190, 202, 1) 48%,
+      rgba(0, 188, 124, 1) 54%,
+      rgba(0, 202, 72, 1) 60%,
+      rgba(107, 206, 0, 1) 66%,
+      rgba(244, 176, 0, 1) 72%,
+      rgba(255, 153, 0, 1) 84%,
+      rgba(255, 104, 0, 1) 90%,
+      rgba(255, 45, 94, 1) 96%
+    );
   }
 }
 

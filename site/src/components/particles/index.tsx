@@ -1,0 +1,113 @@
+import styles from "./styles.module.scss";
+
+import React, { createContext, useContext, useRef, useCallback } from "react";
+import { useAnimationFrame } from "motion/react";
+
+type Particle = {
+  x: number;
+  y: number;
+  xv: number;
+  yv: number;
+  s: number;
+  a: number;
+  el: HTMLDivElement;
+  idle?: boolean;
+};
+
+type ParticlesContextValue = {
+  create: (x: number, y: number, emoji?: string) => void;
+};
+
+const ParticlesContext = createContext<ParticlesContextValue | null>(null);
+
+export function useParticles() {
+  const ctx = useContext(ParticlesContext);
+  if (!ctx) {
+    throw new Error("useParticles must be used within a ParticlesProvider");
+  }
+  return ctx;
+}
+
+const MAX_PARTICLES = 250;
+
+export const ParticlesProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const particles = useRef<Particle[]>([]);
+  const pointerTimeout = useRef<ReturnType<typeof setTimeout>>();
+
+  useAnimationFrame(() => {
+    if (particles.current) {
+      for (let i = 0; i < particles.current.length; i++) {
+        const p = particles.current[i];
+        p.a += p.xv * 0.5;
+        p.y += p.yv *= 0.9;
+        p.x += p.xv *= 0.9;
+        p.s += (1 - p.s) * 0.3;
+        p.yv += (-1.5 + p.yv) * 0.1;
+        p.el.style.transform = `translate(${p.x}px, ${p.y}px) scale(${p.s}) rotate(${p.a}deg)`;
+
+        if (p.y < -100) {
+          p.el.remove();
+          p.idle = true;
+        }
+      }
+
+      particles.current = particles.current.filter((p) => !p.idle);
+    }
+  });
+
+  const create = useCallback((x: number, y: number, emoji = "❤️") => {
+    const pointer = document.getElementById("delight-container-pointer");
+    if (pointer) {
+      pointer.style.left = x + "px";
+      pointer.style.top = y + "px";
+      pointer.style.opacity = "1";
+      pointer.style.width = "3.5rem";
+      pointer.style.height = "3.5rem";
+      pointer.style.transitionDuration = "100ms";
+      clearTimeout(pointerTimeout.current);
+      pointerTimeout.current = setTimeout(() => {
+        pointer.style.opacity = "0";
+        pointer.style.width = "2rem";
+        pointer.style.height = "2rem";
+        pointer.style.transitionDuration = "600ms";
+      }, 200);
+    }
+
+    const amount = 4;
+
+    if (particles.current.length > MAX_PARTICLES) return;
+
+    for (let i = 0; i < amount; i++) {
+      const element = document.createElement("div");
+      element.className = `${styles.particle}`;
+      containerRef.current?.appendChild(element);
+      element.style.fontSize = 20 + Math.ceil(Math.random() * 40) + "px";
+      element.className += " icon-0" + Math.ceil(Math.random() * 5);
+      element.innerHTML = emoji;
+
+      particles.current.push({
+        x: x - 10,
+        y: y - 10,
+        yv:
+          (i === 0 ? 4 : i === 1 ? 8 : i === 2 ? 8 : 0) *
+          (0.25 + Math.random() * 0.25),
+        xv: (i < 2 ? i - 2 : i - 1) * 3,
+        s: 0.2,
+        a: 0,
+        el: element,
+      });
+    }
+  }, []);
+
+  return (
+    <ParticlesContext.Provider value={{ create }}>
+      {children}
+      <div ref={containerRef} className={styles.particles} />
+    </ParticlesContext.Provider>
+  );
+};
