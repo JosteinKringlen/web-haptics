@@ -13,6 +13,8 @@
     letter-spacing: -0.00563rem;
     transition: color 200ms ease;
     color: var(--color-muted);
+    background-color: var(--body-light);
+    mask-image: linear-gradient(to right, transparent, black 1.25rem);
 
     &:hover {
       color: var(--color);

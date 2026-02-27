@@ -7,10 +7,15 @@ import { Logo } from "../../components/logo";
 import { Toggle, ToggleGroup } from "../../components/toggle";
 import { useWebHaptics } from "web-haptics/react";
 import { SafariBar } from "./safari-bar";
+import { useState } from "react";
+import { InstallCommands } from "../installation";
+import { Usage } from "../usage";
 
 export default function MobileView({ disabled }: { disabled?: boolean }) {
   const { debug, setDebug } = useApp();
-  const { trigger } = useWebHaptics();
+  const { trigger } = useWebHaptics({ debug });
+
+  const [view, setView] = useState<"play" | "install">("play");
 
   return (
     <div className={styles.page}>
@@ -31,13 +36,28 @@ export default function MobileView({ disabled }: { disabled?: boolean }) {
         </div>
 
         {!disabled && (
-          <ToggleGroup>
-            <Toggle active>Play</Toggle>
-            <Toggle>Install</Toggle>
-          </ToggleGroup>
+          <div className={styles.toggleGroup}>
+            <ToggleGroup>
+              <Toggle onClick={() => setView("play")} active={view === "play"}>
+                Play
+              </Toggle>
+              <Toggle
+                onClick={() => setView("install")}
+                active={view === "install"}
+              >
+                Install
+              </Toggle>
+            </ToggleGroup>
+          </div>
         )}
 
-        <Demo />
+        {view === "play" && <Demo />}
+        {view === "install" && (
+          <div className={styles.installation}>
+            <InstallCommands />
+            <Usage />
+          </div>
+        )}
       </div>
 
       {disabled && (
