@@ -6,6 +6,7 @@ import { SoundIcon } from "./sound-icon";
 import { Logo } from "../../components/logo";
 import { Toggle, ToggleGroup } from "../../components/toggle";
 import { useWebHaptics } from "web-haptics/react";
+import { SafariBar } from "./safari-bar";
 
 export default function MobileView({ disabled }: { disabled?: boolean }) {
   const { debug, setDebug } = useApp();
@@ -29,13 +30,21 @@ export default function MobileView({ disabled }: { disabled?: boolean }) {
           <p>Haptic feedback for the mobile web</p>
         </div>
 
-        <ToggleGroup disabled={disabled}>
-          <Toggle active>Play</Toggle>
-          <Toggle>Install</Toggle>
-        </ToggleGroup>
+        {!disabled && (
+          <ToggleGroup>
+            <Toggle active>Play</Toggle>
+            <Toggle>Install</Toggle>
+          </ToggleGroup>
+        )}
 
         <Demo />
       </div>
+
+      {disabled && (
+        <div className={styles.safariUI}>
+          <SafariBar />
+        </div>
+      )}
     </div>
   );
 }
