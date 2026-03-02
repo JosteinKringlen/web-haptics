@@ -99,7 +99,7 @@ export default function MobileView({
                   }}
                 >
                   <section>
-                    <h3>Builder</h3>
+                    <h3>Custom Haptic</h3>
                     <HapticBuilder />
                   </section>
                 </div>

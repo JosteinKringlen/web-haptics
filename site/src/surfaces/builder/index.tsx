@@ -458,7 +458,12 @@ export const HapticBuilder = () => {
     // Reset any in-progress playback
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-    setActiveTapIds(new Set());
+
+    // Immediately activate taps at position 0 to avoid setTimeout race
+    const immediate = new Set(
+      state.taps.filter((t) => t.position === 0).map((t) => t.id),
+    );
+    setActiveTapIds(immediate);
 
     const pat = tapsToPattern(state.taps);
     trigger(pat);
@@ -466,12 +471,14 @@ export const HapticBuilder = () => {
     setPlayCount((c) => c + 1);
 
     for (const tap of state.taps) {
-      timeoutsRef.current.push(
-        window.setTimeout(
-          () => setActiveTapIds((prev) => new Set(prev).add(tap.id)),
-          tap.position,
-        ),
-      );
+      if (tap.position > 0) {
+        timeoutsRef.current.push(
+          window.setTimeout(
+            () => setActiveTapIds((prev) => new Set(prev).add(tap.id)),
+            tap.position,
+          ),
+        );
+      }
       timeoutsRef.current.push(
         window.setTimeout(() => {
           setActiveTapIds((prev) => {

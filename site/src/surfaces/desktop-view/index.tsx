@@ -89,7 +89,7 @@ export default function DesktopView() {
         </section>
 
         <section>
-          <h3>Builder</h3>
+          <h3>Custom Haptic</h3>
           <HapticBuilder />
         </section>
 
