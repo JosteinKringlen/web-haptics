@@ -11,7 +11,6 @@ import { InstallCommands } from "../installation";
 import { Usage } from "../usage";
 import { AnimatePresence, motion } from "motion/react";
 import { useHaptics } from "../../hooks/useHaptics";
-import { AutoResize } from "../../components/auto-resizer";
 import { Footer } from "../../components/footer";
 import { HapticBuilder } from "../builder";
 
@@ -39,74 +38,80 @@ export default function MobileView({
           <SoundIcon enabled={debug} />
         </button>
       </div>
+
       <div className={styles.container}>
-        <div className={styles.header}>
-          <Logo />
-          <p>Haptic feedback for the mobile web</p>
-        </div>
-
-        {!disabled && (
-          <div className={styles.toggleGroup}>
-            <ToggleGroup>
-              <Toggle onClick={() => setView("play")} active={view === "play"}>
-                Play
-              </Toggle>
-              <Toggle
-                onClick={() => setView("install")}
-                active={view === "install"}
-              >
-                Install
-              </Toggle>
-              <Toggle
-                onClick={() => setView("build")}
-                active={view === "build"}
-              >
-                Build
-              </Toggle>
-            </ToggleGroup>
+        <div className={styles.top}>
+          <div className={styles.header}>
+            <Logo />
+            <p>Haptic feedback for the mobile web</p>
           </div>
-        )}
 
-        <AutoResize property="height" overflow duration={600}>
-          <AnimatePresence initial={false} mode="popLayout">
-            <motion.div
-              key={view}
-              initial={{ x: view === "play" ? -8 : 8 }}
-              animate={{ x: 0 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-            >
-              {view === "play" && <Demo setShaking={setShaking} />}
-              {view === "install" && (
-                <div className={styles.installation}>
-                  <section>
-                    <h3>Install</h3>
-                    <InstallCommands />
-                  </section>
-
-                  <section>
-                    <h3>Usage</h3>
-                    <Usage />
-                  </section>
-
-                  <Footer />
-                </div>
-              )}
-              {view === "build" && (
-                <div
-                  className={styles.installation}
-                  style={{
-                    minHeight: 300,
-                  }}
+          {!disabled && (
+            <div className={styles.toggleGroup}>
+              <ToggleGroup>
+                <Toggle
+                  onClick={() => setView("play")}
+                  active={view === "play"}
                 >
-                  <section>
-                    <h3>Custom Haptic</h3>
-                    <HapticBuilder />
-                  </section>
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </AutoResize>
+                  Play
+                </Toggle>
+                <Toggle
+                  onClick={() => setView("install")}
+                  active={view === "install"}
+                >
+                  Install
+                </Toggle>
+                <Toggle
+                  onClick={() => setView("build")}
+                  active={view === "build"}
+                >
+                  Build
+                </Toggle>
+              </ToggleGroup>
+            </div>
+          )}
+        </div>
+        <div className={styles.scrollarea}>
+          <div className={styles.content}>
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.div
+                key={view}
+                initial={{ x: view === "play" ? -8 : 8 }}
+                animate={{ x: 0 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              >
+                {view === "play" && <Demo setShaking={setShaking} />}
+                {view === "install" && (
+                  <div className={styles.installation}>
+                    <section>
+                      <InstallCommands />
+                    </section>
+
+                    <section>
+                      <h3>Usage</h3>
+                      <Usage />
+                    </section>
+
+                    <Footer />
+                  </div>
+                )}
+                {view === "build" && (
+                  <div
+                    className={styles.installation}
+                    style={{
+                      minHeight: 300,
+                    }}
+                  >
+                    <section>
+                      <h3>Custom Haptic</h3>
+                      <HapticBuilder />
+                    </section>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
       </div>
 
       {disabled && (
